@@ -52,14 +52,39 @@ exports.userRegister = async (req, res) => {
 // ==================== LOGIN ====================
 
 // POST http://localhost:3000/login
-// Body: { data }
+// Body: { email, password }
 
-exports.userLogin = (req, res) => {
-  res.status(200).json({
-    msg: "Success",
-  });
+exports.userLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const existingUser = await users.findOne({ email });
+
+    if (!existingUser) {
+      return res.status(400).json({
+        msg: "Invalid Email / Password",
+      });
+    }
+
+    const isPassword = await bcrypt.compare(password, existingUser.password);
+
+    if (!isPassword) {
+      return res.status(400).json({
+        msg: "Invalid Email / Password",
+      });
+    }
+
+    return res.status(200).json({
+      msg: "Login Successful",
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      msg: "Server Error",
+    });
+  }
 };
-
 // ==================== PROFILE ====================
 
 // GET http://localhost:3000/profile
