@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const users = require("../Models/userModel");
 
 // ==================== REGISTER ====================
@@ -60,23 +61,37 @@ exports.userLogin = async (req, res) => {
   try {
     const existingUser = await users.findOne({ email });
 
-    if (!existingUser) {
-      return res.status(400).json({
-        msg: "Invalid Email / Password",
+    if (existingUser) {
+      console.log(existingUser);
+
+      const passwordResult = await bcrypt.compare(
+        password,
+        existingUser.password,
+      );
+
+      if (passwordResult) {
+        const token = jwt.sign(
+          {
+            userId: existingUser._id,
+            userMail: existingUser.email,
+          },
+          process.env.SECRET_KEY,
+        );
+
+        return res.status(200).json({
+          msg: "Login Successful",
+          token: token,
+        });
+      } else {
+        return res.status(401).json({
+          msg: "Invalid Email/Password",
+        });
+      }
+    } else {
+      return res.status(401).json({
+        msg: "Invalid Email/Password",
       });
     }
-
-    const isPassword = await bcrypt.compare(password, existingUser.password);
-
-    if (!isPassword) {
-      return res.status(400).json({
-        msg: "Invalid Email / Password",
-      });
-    }
-
-    return res.status(200).json({
-      msg: "Login Successful",
-    });
   } catch (err) {
     console.log(err);
 
