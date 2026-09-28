@@ -13,6 +13,9 @@ const cors = require("cors");
 // Import user routes
 const userRoutes = require("./routes/routes");
 
+// Import JWT middleware
+// const jwtMiddleware = require("./middlewares/jwtMiddleware");
+
 // Create an Express server
 const server = express();
 
@@ -21,6 +24,9 @@ server.use(cors());
 
 // Parse incoming JSON request bodies
 server.use(express.json());
+
+// Apply JWT middleware to incoming requests
+// server.use(jwtMiddleware);
 
 // Use user routes
 server.use("/", userRoutes);
