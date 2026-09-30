@@ -102,6 +102,59 @@ exports.userLogin = async (req, res) => {
   }
 };
 
+// ==================== GOOGLE LOGIN ====================
+
+exports.googleLogin = async (req, res) => {
+  const { email, name, picture } = req.body;
+
+  try {
+    const existingUser = await users.findOne({ email });
+
+    if (existingUser) {
+      const token = jwt.sign(
+        {
+          userId: existingUser._id,
+          userMail: existingUser.email,
+        },
+        process.env.SECRET_KEY,
+      );
+
+      return res.status(200).json({
+        msg: "Google Login Successful",
+        token: token,
+        user: existingUser,
+      });
+    }
+
+    const newUser = await users.create({
+      username: name,
+      email,
+      password: "123",
+      picture: picture,
+    });
+
+    const token = jwt.sign(
+      {
+        userId: newUser._id,
+        userMail: newUser.email,
+      },
+      process.env.SECRET_KEY,
+    );
+
+    return res.status(200).json({
+      msg: "Google Login Successful",
+      token: token,
+      user: newUser,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      msg: "Server Error",
+    });
+  }
+};
+
 // ==================== PROFILE ====================
 
 // GET http://localhost:3000/profile
