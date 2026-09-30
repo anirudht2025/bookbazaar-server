@@ -13,6 +13,7 @@ router.post("/register", userController.userRegister);
 // ==================== LOGIN ====================
 
 router.post("/login", userController.userLogin);
+router.post("/google-auth", userController.googleLogin);
 
 // ==================== PROFILE ====================
 
