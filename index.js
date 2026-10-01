@@ -31,12 +31,15 @@ server.use(express.json());
 // Use user routes
 server.use("/", userRoutes);
 
+// Handling global errors using application-level middleware
+server.use((err, req, res, next) => {
+  res.status(500).json(err);
+});
+
 // Get the port number from environment variables
 const PORT = process.env.PORT;
 
 // Start the Express server
 server.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT} & Waiting for client requests!`
-  );
+  console.log(`Server running on port ${PORT} & Waiting for client requests!`);
 });
