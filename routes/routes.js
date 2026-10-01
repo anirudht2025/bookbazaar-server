@@ -5,6 +5,7 @@ const userController = require("../controllers/userController");
 const router = express.Router();
 
 const jwtMiddleware = require("../middlewares/jwtMiddleware");
+const multerMiddleware = require("../middlewares/multerMiddleware");
 
 // ==================== REGISTER ====================
 
@@ -17,6 +18,11 @@ router.post("/google-auth", userController.googleLogin);
 
 // ==================== PROFILE ====================
 
-router.get("/profile", jwtMiddleware, userController.userProfile);
+router.put(
+  "/profile-edit",
+  jwtMiddleware,
+  multerMiddleware.single("profileImage"),
+  userController.profileEdit,
+);
 
 module.exports = router;
