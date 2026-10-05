@@ -28,6 +28,9 @@ server.use(express.json());
 // Apply JWT middleware to incoming requests
 // server.use(jwtMiddleware);
 
+// Serve uploaded images
+server.use("/uploads", express.static("uploads"));
+
 // Use user routes
 server.use("/", userRoutes);
 
