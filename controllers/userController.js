@@ -133,14 +133,22 @@ exports.profileEdit = async (req, res) => {
 
   const picture = req.file?.filename;
 
-  const encryptedPassword = await bcrypt.hash(password, 10);
+  const encryptedPassword = password
+    ? await bcrypt.hash(password, 10)
+    : undefined;
 
   const updatedUser = await users.findByIdAndUpdate(
     { _id: id },
 
-    { username, email, password: encryptedPassword, picture, bio },
+    {
+      username,
+      email,
+      ...(password && { password: encryptedPassword }),
+      ...(picture && { picture }),
+      bio,
+    },
 
-    { returnDocument: "after" }
+    { returnDocument: "after" },
     // { new: true },
   );
 
