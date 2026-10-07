@@ -139,7 +139,6 @@ exports.profileEdit = async (req, res) => {
 
   const updatedUser = await users.findByIdAndUpdate(
     { _id: id },
-
     {
       username,
       email,
@@ -147,7 +146,6 @@ exports.profileEdit = async (req, res) => {
       ...(picture && { picture }),
       bio,
     },
-
     { returnDocument: "after" },
     // { new: true },
   );
