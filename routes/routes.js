@@ -1,6 +1,7 @@
 const express = require("express");
 
 const userController = require("../controllers/userController");
+const bookController = require("../controllers/bookController");
 
 const router = express.Router();
 
@@ -24,5 +25,16 @@ router.put(
   multerMiddleware.single("profileImage"),
   userController.profileEdit,
 );
+
+// ==================== BOOK ====================
+
+router.post(
+  "/add-book",
+  jwtMiddleware,
+  multerMiddleware.array("uploadedImages"),
+  bookController.addBook,
+);
+
+// ====================      ====================
 
 module.exports = router;
