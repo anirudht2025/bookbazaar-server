@@ -29,9 +29,9 @@ router.put(
 // ==================== BOOK ====================
 
 router.post(
-  "/add-book",
+  "/books",
   jwtMiddleware,
-  multerMiddleware.array("uploadedImages"),
+  multerMiddleware.array("uploadedImages", 3),
   bookController.addBook,
 );
 
