@@ -17,6 +17,8 @@ router.post("/register", userController.userRegister);
 router.post("/login", userController.userLogin);
 router.post("/google-auth", userController.googleLogin);
 
+// ============== AUTHENTICATED USERS ==============
+
 // ==================== PROFILE ====================
 
 router.put(
@@ -35,6 +37,8 @@ router.post(
   bookController.addBook,
 );
 
-// ====================      ====================
+// ==================== LATEST BOOKS ====================
+
+router.get("/latest-books", jwtMiddleware, bookController.latestBooks);
 
 module.exports = router;
