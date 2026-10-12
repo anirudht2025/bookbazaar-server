@@ -81,7 +81,10 @@ exports.addBook = async (req, res) => {
 exports.latestBooks = async (req, res) => {
   // const latestbooklist = await books.find();
   // res.status(200).json(latestbooklist.slice(0, 4));
-  const latestbooklist = await books.find().sort({ createdAt: -1 }).limit(4);
+  const latestbooklist = await books
+    .find({ status: "approved" })
+    .sort({ createdAt: -1 })
+    .limit(4);
   res.status(200).json(latestbooklist);
 };
 
@@ -98,9 +101,17 @@ exports.latestBooks = async (req, res) => {
 //   }
 // };
 
-exports.listBooks = async (req, res) => {
-  const listuserbooks = await books.find({
-    sellerMail: { $ne: req.payload.userMail },
-  });
-  res.status(200).json(listuserbooks);
+exports.bookList = async (req, res) => {
+  try {
+    const mail = req.payload?.userMail;
+    const booklist = await books.find({
+      sellerMail: { $ne: mail },
+    });
+    res.status(200).json(booklist);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch books",
+      error: error.message,
+    });
+  }
 };
