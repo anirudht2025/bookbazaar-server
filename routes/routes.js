@@ -41,4 +41,8 @@ router.post(
 
 router.get("/latest-books", jwtMiddleware, bookController.latestBooks);
 
+// ==================== BOOK LIST (EXCLUDING LOGGED-IN SELLER) ====================
+
+router.get("/booklist", jwtMiddleware, bookController.bookList);
+
 module.exports = router;
