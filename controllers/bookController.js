@@ -115,3 +115,19 @@ exports.bookList = async (req, res) => {
     });
   }
 };
+
+// LIST BOOKS: LIST BOOKS ADDED BY USER
+
+exports.userAddedBook = async (req, res) => {
+  const mail = req.payload?.userMail;
+  const booklist = await books.find({ sellerMail: mail });
+  res.status(200).json(booklist);
+};
+
+// REMOVE BOOKS BY USER: BEFORE ADMIN APPROVES IT
+
+exports.deleteAddedBook = async (req, res) => {
+  const { bid } = req.params;
+  const deletedBook = await books.findByIdAndDelete(bid);
+  res.status(200).json(deletedBook);
+};
