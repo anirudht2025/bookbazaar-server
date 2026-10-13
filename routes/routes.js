@@ -45,4 +45,16 @@ router.get("/latest-books", jwtMiddleware, bookController.latestBooks);
 
 router.get("/booklist", jwtMiddleware, bookController.bookList);
 
+// ==================== USER ADDED BOOKS ====================
+
+router.get("/user-books", jwtMiddleware, bookController.userAddedBook);
+
+// ==================== DELETE BOOK ADDED BY USER ====================
+
+router.delete(
+  "/delete-book/:bid",
+  jwtMiddleware,
+  bookController.deleteAddedBook,
+);
+
 module.exports = router;
