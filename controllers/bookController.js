@@ -131,3 +131,11 @@ exports.deleteAddedBook = async (req, res) => {
   const deletedBook = await books.findByIdAndDelete(bid);
   res.status(200).json(deletedBook);
 };
+
+// PURCHASED BOOKS BY THE LOGGED IN USER
+
+exports.purchasedBookList = async (req, res) => {
+  const mail = req.payload?.userMail;
+  const purchasedBookList = await books.find({ buyerMail: mail });
+  return res.status(200).json(purchasedBookList);
+};
