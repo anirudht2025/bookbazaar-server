@@ -57,4 +57,10 @@ router.delete(
   bookController.deleteAddedBook,
 );
 
+// ==================== PURCHASED BOOKS BY LOGGED IN USER ====================
+
+router.get("/purchased-books", jwtMiddleware, bookController.purchasedBookList);
+
+// ====================  ====================  ====================
+
 module.exports = router;
