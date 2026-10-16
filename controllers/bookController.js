@@ -139,3 +139,11 @@ exports.purchasedBookList = async (req, res) => {
   const purchasedBookList = await books.find({ buyerMail: mail });
   return res.status(200).json(purchasedBookList);
 };
+
+// VIEW BOOK DETAILS OF A SPECIFIC BOOK
+
+exports.getBookById = async (req, res) => {
+  const { bid } = req.params;
+  const bookDetail = await books.findById(bid);
+  return res.status(200).json(bookDetail);
+};
