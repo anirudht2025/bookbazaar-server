@@ -61,6 +61,10 @@ router.delete(
 
 router.get("/purchased-books", jwtMiddleware, bookController.purchasedBookList);
 
+// ==================== VIEW BOOK DETAILS ====================
+
+router.get("/books/:bid", jwtMiddleware, bookController.getBookById);
+
 // ====================  ====================  ====================
 
 module.exports = router;
