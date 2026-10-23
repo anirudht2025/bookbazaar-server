@@ -147,3 +147,22 @@ exports.getBookById = async (req, res) => {
   const bookDetail = await books.findById(bid);
   return res.status(200).json(bookDetail);
 };
+
+// BOOK PAYMENT
+
+exports.bookPayment = async (req, res) => {
+  console.log("Inside book payment");
+
+  const buyerMail = req.payload?.userMail;
+  const { bid } = req.params;
+  const bookDetail = await books.findById(bid);
+
+  bookDetail.status = "sold";
+  bookDetail.buyerMail = buyerMail;
+
+  await bookDetail.save();
+
+  // CREATE STRIPE CHECKOUT SESSION
+
+  return res.status(200).json({});
+};
