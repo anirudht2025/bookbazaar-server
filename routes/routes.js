@@ -7,6 +7,7 @@ const router = express.Router();
 
 const jwtMiddleware = require("../middlewares/jwtMiddleware");
 const multerMiddleware = require("../middlewares/multerMiddleware");
+const adminMiddleware = require("../middlewares/adminMiddleware");
 
 // ==================== REGISTER ====================
 
@@ -64,6 +65,20 @@ router.get("/purchased-books", jwtMiddleware, bookController.purchasedBookList);
 // ==================== VIEW BOOK DETAILS ====================
 
 router.get("/books/:bid", jwtMiddleware, bookController.getBookById);
+
+// ==================== BOOK PAYMENT ====================
+
+router.get("/payment/:bid", jwtMiddleware, bookController.bookPayment);
+
+// ====================  ====================  ====================
+
+// ==================== ADMIN USER ROUTES ====================
+
+// Get all books for admin
+router.get("/admin/allBooks", adminMiddleware, bookController.getAdminAllBooks);
+
+// Approve a book (admin)
+router.get("/admin/approve/:bid", adminMiddleware, bookController.approveBook);
 
 // ====================  ====================  ====================
 
