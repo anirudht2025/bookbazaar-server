@@ -1,5 +1,8 @@
 const books = require("../models/bookModel");
 
+const stripe = require("stripe")(process.env.STRIPE_SK);
+console.log("Stripe secret key loaded:", !!process.env.STRIPE_SK);
+
 // ADD BOOK: BY USER
 
 exports.addBook = async (req, res) => {
@@ -157,12 +160,67 @@ exports.bookPayment = async (req, res) => {
   const { bid } = req.params;
   const bookDetail = await books.findById(bid);
 
+  console.log("Book details:", bookDetail);
+
   bookDetail.status = "sold";
   bookDetail.buyerMail = buyerMail;
 
   await bookDetail.save();
 
   // CREATE STRIPE CHECKOUT SESSION
+  console.log("Creating Stripe Checkout Session...");
 
-  return res.status(200).json({});
+  const line_items = [
+    {
+      price_data: {
+        currency: "inr",
+        product_data: {
+          name: bookDetail.title,
+          description: `${bookDetail.author} - ${bookDetail.publisher}`,
+          // images: bookDetail.uploadedImages,
+          metadata: {
+            title: bookDetail.title,
+            author: bookDetail.author,
+            price: String(bookDetail.discountPrice),
+          },
+        },
+        unit_amount: Math.round(bookDetail.discountPrice * 100),
+      },
+      quantity: 1,
+    },
+  ];
+
+  // console.log("Stripe key starts with:", process.env.STRIPE_SK?.substring(0, 7));
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      success_url: "http://localhost:5173/success",
+      cancel_url: "http://localhost:5173/failed",
+      line_items,
+      mode: "payment",
+    });
+    return res.status(200).json(session);
+  } catch (error) {
+    console.log("STRIPE ERROR:", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// ==================== ADMIN ====================
+
+// GET ALL BOOKS FOR ADMIN
+
+exports.getAdminAllBooks = async (req, res) => {
+  const allBooks = await books.find();
+  return res.status(200).json(allBooks);
+};
+
+// UPDATE BOOK STATUS
+
+exports.approveBook = async (req, res) => {
+  const { bid } = req.params;
+  const bookDetail = await books.findById(bid);
+  bookDetail.status = "approved";
+  await bookDetail.save();
+  res.status(200).json(bookDetail);
 };
