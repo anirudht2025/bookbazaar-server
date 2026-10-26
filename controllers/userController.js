@@ -51,7 +51,8 @@ exports.userLogin = async (req, res) => {
     if (passwordResult) {
       const token = jwt.sign(
         {
-          userId: existingUser._id,
+          // userId: existingUser._id,
+          role: existingUser.role,
           userMail: existingUser.email,
         },
         process.env.SECRET_KEY,
