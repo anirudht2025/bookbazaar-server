@@ -109,6 +109,7 @@ exports.bookList = async (req, res) => {
     const mail = req.payload?.userMail;
     const booklist = await books.find({
       sellerMail: { $ne: mail },
+      status: "approved",
     });
     res.status(200).json(booklist);
   } catch (error) {
