@@ -51,7 +51,7 @@ exports.userLogin = async (req, res) => {
     if (passwordResult) {
       const token = jwt.sign(
         {
-          // userId: existingUser._id,
+          userId: existingUser._id,
           role: existingUser.role,
           userMail: existingUser.email,
         },
@@ -149,6 +149,38 @@ exports.profileEdit = async (req, res) => {
     },
     { returnDocument: "after" },
     // { new: true },
+  );
+
+  res.status(200).json(updatedUser);
+};
+
+// ==================== GET ALL USERS: ADMIN ====================
+
+exports.getAllUsers = async (req, res) => {
+  const allUsers = await users.find().select("-password");
+  return res.status(200).json(allUsers);
+};
+
+// ==================== ADMIN PROFILE EDIT ====================
+
+exports.adminProfileEdit = async (req, res) => {
+  console.log("Profile update request:", req.body, req.file, req.payload);
+  const { username, password } = req.body;
+  const id = req.payload?.userId;
+  const pic = req.file?.filename;
+
+  const encryptedPassword = password
+    ? await bcrypt.hash(password, 10)
+    : undefined;
+
+  const updatedUser = await users.findByIdAndUpdate(
+    { _id: id },
+    {
+      username,
+      ...(password && { password: encryptedPassword }),
+      ...(pic && { picture: pic }),
+    },
+    { new: true },
   );
 
   res.status(200).json(updatedUser);
