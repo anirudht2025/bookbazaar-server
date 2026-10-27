@@ -80,6 +80,17 @@ router.get("/admin/allBooks", adminMiddleware, bookController.getAdminAllBooks);
 // Approve a book (admin)
 router.get("/admin/approve/:bid", adminMiddleware, bookController.approveBook);
 
+// Get all users for admin
+router.get("/admin/allUsers", adminMiddleware, userController.getAllUsers);
+
+// Admin profile edit
+router.put(
+  "/admin/profile-update",
+  adminMiddleware,
+  multerMiddleware.single("picture"),
+  userController.adminProfileEdit,
+);
+
 // ====================  ====================  ====================
 
 module.exports = router;
