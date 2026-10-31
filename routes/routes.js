@@ -91,6 +91,14 @@ router.put(
   userController.adminProfileEdit,
 );
 
+// ==================== GOOGLE GEMINI AI ====================
+
+router.post(
+  "/gen-ai",
+  jwtMiddleware,
+  bookController.generateBookDetailsAIController,
+);
+
 // ====================  ====================  ====================
 
 module.exports = router;
