@@ -3,6 +3,8 @@ const books = require("../models/bookModel");
 const stripe = require("stripe")(process.env.STRIPE_SK);
 console.log("Stripe secret key loaded:", !!process.env.STRIPE_SK);
 
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 // ADD BOOK: BY USER
 
 exports.addBook = async (req, res) => {
@@ -224,4 +226,28 @@ exports.approveBook = async (req, res) => {
   bookDetail.status = "approved";
   await bookDetail.save();
   res.status(200).json(bookDetail);
+};
+
+// GET BOOK CONTENT USING GOOGLE GEN AI
+
+exports.generateBookDetailsAIController = async (req, res) => {
+  try {
+    console.log("Inside Google Gen AI Controller!!");
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const { title } = req.body;
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3.5-flash-lite",
+    });
+    const result = await model.generateContent(
+      `Give me a short abstract of the book ${title}`,
+    );
+    // console.log(result.response.text());
+    res.status(200).json(result.response.text());
+  } catch (error) {
+    console.log("Gemini Error:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
