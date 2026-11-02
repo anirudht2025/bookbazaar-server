@@ -197,8 +197,10 @@ exports.bookPayment = async (req, res) => {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/failed",
+      // success_url: "http://localhost:5173/success",
+      // cancel_url: "http://localhost:5173/failed",
+      success_url: "bookbazaar-psi.vercel.app/success",
+      cancel_url: "bookbazaar-psi.vercel.app/failed",
       line_items,
       mode: "payment",
     });
